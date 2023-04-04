@@ -1,0 +1,30 @@
+
+
+services:
+  frontend:
+    container_name: local-chat_frontend
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    command: yarn dev --host
+  
+  backend:
+    container_name: local-chat_backend
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes: 
+      - ./backend:/app
+    command: air -c .air.toml
+    depends_on:
+      - database
+  
+  database:
+    container_name: local-chat_database
+    image: postgres:15.2-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: local-chat
