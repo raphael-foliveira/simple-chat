@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/gin-gonic/gin"
-	"golang.org/x/net/websocket"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/websocket/v2"
 )
 
 type ChatSubscriber struct {
@@ -27,13 +27,13 @@ func WsServer(ws *websocket.Conn) {
 
 	for {
 		var message Message
-		err := websocket.JSON.Receive(ws, &message)
+		err := ws.ReadJSON(&message)
 		if err != nil {
 			fmt.Println("Error in receiving:", err)
 			break
 		}
 		for _, subscriber := range subscribers.m {
-			websocket.JSON.Send(subscriber.Conn, message)
+			subscriber.Conn.WriteJSON(message)
 		}
 
 		fmt.Println("Received from", message.Sender, ":", message.Content)
@@ -41,12 +41,9 @@ func WsServer(ws *websocket.Conn) {
 }
 
 func main() {
-	router := gin.Default()
+	app := fiber.New()
 
-	router.GET("/chat", func(c *gin.Context) {
-		handler := websocket.Handler(WsServer)
-		handler.ServeHTTP(c.Writer, c.Request)
-	})
+	app.Get("/chat", websocket.New(WsServer))
 
-	router.Run(":8000")
+	app.Listen(":8000")
 }
