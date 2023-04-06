@@ -1,21 +1,48 @@
-import { Box, Button, Container, TextField, Typography, InputLabel } from "@mui/material";
-import { ChangeEventHandler, MouseEventHandler, useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+  InputLabel,
+} from "@mui/material";
+import {
+  ChangeEventHandler,
+  FormEventHandler,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import { Message } from "../../../types/Message";
+import { Link, useLoaderData, useParams } from "react-router-dom";
 
 function ChatBox() {
   const [message, setMessage] = useState("");
   const [messagesList, setMessagesList] = useState<Message[]>([]);
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
-  const [senderName, setSenderName] = useState<string>("");
+  const [userName, setSenderName] = useState<string>("");
+  const { chatName } = useParams<string>();
 
   useEffect(() => {
+    fetch(`http://localhost:8000/messages/${chatName}`)
+      .then((response) => response.json())
+      .then((messages) => {
+        console.log(messages);
+        setMessagesList(messages);
+      });
+  }, []);
+
+  useEffect(() => {
+    setSenderName(localStorage.getItem("userName") || "anonymous");
     if (webSocket) {
       webSocket.onmessage = (event) => {
         const newMessage: Message = JSON.parse(event.data);
         setMessagesList((prevMessages) => [...prevMessages, newMessage]);
       };
     } else {
-      const newWebSocket = new WebSocket("ws://localhost:8000/chat");
+      const newWebSocket = new WebSocket(
+        `ws://localhost:8000/chat/${chatName}`
+      );
       setWebSocket(newWebSocket);
     }
     return () => {
@@ -23,7 +50,6 @@ function ChatBox() {
         webSocket.close();
       }
     };
-
   }, [webSocket]);
 
   const handleChange: ChangeEventHandler<
@@ -32,12 +58,13 @@ function ChatBox() {
     setMessage(event.target.value);
   };
 
-  const handleSendMessage: MouseEventHandler<HTMLButtonElement> = (event) => {
-    const newMessage: Message = {
-      id: `${Math.floor(Math.random() * 1000)}`,
-      sender: senderName,
+  const handleSendMessage: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    const newMessage = {
+      sender: userName,
       content: message,
       sentAt: new Date(),
+      chatName: chatName!,
     };
     if (webSocket && message.length > 0) {
       webSocket.send(JSON.stringify(newMessage));
@@ -47,17 +74,21 @@ function ChatBox() {
 
   const handleDeleteMessage: MouseEventHandler<HTMLDivElement> = (event) => {
     const messageId = event.currentTarget.id;
-    setMessagesList(messagesList.filter((message) => message.id !== messageId));
+    setMessagesList(
+      messagesList.filter((message) => `${message.id}` !== messageId)
+    );
   };
 
   return (
     <Container>
-      <TextField label="Name" onChange={(e) => setSenderName(e.target.value)} />
+      <Link to="/">Home</Link>
+      <Typography variant="h3">{chatName}</Typography>
+      <Typography variant="body1">Sending messages as {userName}</Typography>
       <Box
         sx={{
           height: "600px",
           border: `2px solid`,
-          borderColor: 'primary.main',
+          borderColor: "primary.main",
           borderRadius: "10px",
           margin: "5px 0",
           padding: "10px",
@@ -65,45 +96,48 @@ function ChatBox() {
       >
         {messagesList.map((message) => {
           return (
-            <Typography
+            <Box
               onClick={handleDeleteMessage}
               key={message.id}
-              id={message.id}
-              sx={{ textAlign: message.sender == senderName ? "left" : "right" }}
-              variant="body1"
+              id={`${message.id}`}
+              sx={{
+                textAlign: message.sender == userName ? "left" : "right",
+              }}
               marginBottom={3}
             >
-              <Typography variant="inherit" fontWeight={700}>{message.sender}:</Typography>
-              <Typography variant="inherit" margin={"0 20px"}>{message.content}</Typography>
-            </Typography>
+              <Typography variant="inherit" fontWeight={700}>
+                {message.sender}:
+              </Typography>
+              <Typography variant="inherit" margin={"0 20px"}>
+                {message.content}
+              </Typography>
+            </Box>
           );
         })}
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
-        <TextField
-          id="outlined-basic"
-          label="Message"
-          value={message}
-          onChange={handleChange}
+      <form action="" onSubmit={handleSendMessage}>
+        <Box
           sx={{
-            width: "100%",
-            marginBottom: "5px",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
           }}
-        />
-        <Button
-          variant="contained"
-          onClick={handleSendMessage}
-          sx={{ minWidth: "50%" }}
         >
-          Send
-        </Button>
-      </Box>
+          <TextField
+            id="outlined-basic"
+            label="Message"
+            value={message}
+            onChange={handleChange}
+            sx={{
+              width: "100%",
+              marginBottom: "5px",
+            }}
+          />
+          <Button variant="contained" sx={{ minWidth: "50%" }} type="submit">
+            Send
+          </Button>
+        </Box>
+      </form>
     </Container>
   );
 }

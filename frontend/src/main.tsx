@@ -1,8 +1,10 @@
+import { createTheme, ThemeProvider } from "@mui/material";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ChatBox from "./components/chatbox/ChatBox";
+import HomeForm from "./components/home-form/HomeForm";
 import "./index.css";
-import { createTheme, ThemeProvider } from "@mui/material";
 
 const theme = createTheme({
   palette: {
@@ -16,7 +18,12 @@ const theme = createTheme({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <App />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomeForm />} />
+          <Route path="/chat/:chatName" element={<ChatBox />} />
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>
 );
