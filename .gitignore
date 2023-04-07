@@ -2,3 +2,4 @@ node_modules
 tmp
 .env
 development.yml
+run_dev.sh

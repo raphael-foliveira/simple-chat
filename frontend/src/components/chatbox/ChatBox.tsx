@@ -136,6 +136,7 @@ function ChatBox() {
               width: "100%",
               marginBottom: "5px",
             }}
+            autoComplete="off"
           />
           <Button variant="contained" sx={{ minWidth: "50%" }} type="submit">
             Send
