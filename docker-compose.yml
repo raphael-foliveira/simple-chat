@@ -5,12 +5,12 @@ services:
     ports:
       - "80:5173"
     environment:
-      VITE_API_URL: localhost:8000
+      VITE_API_URL: "172.31.44.98:8000"
     depends_on:
-      - backend
+      - backend_api
     command: yarn dev --host
 
-  backend:
+  backend_api:
     container_name: local-chat_backend
     build: ./backend
     ports:
