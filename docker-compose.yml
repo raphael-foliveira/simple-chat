@@ -15,7 +15,7 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
-    command: air -c .air.toml
+    command: go run ./cmd/main.go
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
