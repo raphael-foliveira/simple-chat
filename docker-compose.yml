@@ -6,6 +6,9 @@ services:
       - "80:5173"
     depends_on:
       - backend
+    environment:
+      BACKEND_URL: http://backend:8000
+      WEB_SOCKET_URL: ws://backend:8000
     volumes:
       - ./frontend:/app
     command: yarn dev --host

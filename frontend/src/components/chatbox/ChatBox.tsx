@@ -24,7 +24,7 @@ function ChatBox() {
   const { chatName } = useParams<string>();
 
   useEffect(() => {
-    fetch(`http://localhost:8000/messages/${chatName}`)
+    fetch(`${process.env.API_URL}/messages/${chatName}`)
       .then((response) => response.json())
       .then((messages) => {
         console.log(messages);
@@ -41,7 +41,7 @@ function ChatBox() {
       };
     } else {
       const newWebSocket = new WebSocket(
-        `ws://localhost:8000/chat/${chatName}`
+        `${process.env.WEBSOCKET_URL}/chat/${chatName}`
       );
       setWebSocket(newWebSocket);
     }
