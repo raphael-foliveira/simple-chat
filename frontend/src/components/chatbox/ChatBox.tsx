@@ -1,20 +1,14 @@
-import {
-  Box,
-  Button,
-  Container,
-  TextField,
-  Typography,
-  InputLabel,
-} from "@mui/material";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import {
   ChangeEventHandler,
   FormEventHandler,
   MouseEventHandler,
   useEffect,
   useState,
+  useRef,
 } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Message } from "../../../types/Message";
-import { Link, useLoaderData, useParams } from "react-router-dom";
 
 function ChatBox() {
   const [message, setMessage] = useState("");
@@ -22,6 +16,14 @@ function ChatBox() {
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const [userName, setSenderName] = useState<string>("");
   const { chatName } = useParams<string>();
+  const messageBoxRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!messageBoxRef.current) {
+      return;
+    }
+    messageBoxRef.current.scrollTo(0, messageBoxRef.current.scrollHeight);
+  }, [messagesList]);
 
   useEffect(() => {
     fetch(`http://${import.meta.env.VITE_API_URL}/messages/${chatName}`)
@@ -92,7 +94,9 @@ function ChatBox() {
           borderRadius: "10px",
           margin: "5px 0",
           padding: "10px",
+          overflowX: "auto",
         }}
+        ref={messageBoxRef}
       >
         {messagesList.map((message) => {
           return (
