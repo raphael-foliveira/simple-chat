@@ -2,7 +2,11 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
+	"os"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/raphael-foliveira/simple-chat/backend/models"
 )
@@ -10,11 +14,21 @@ import (
 var Db *sql.DB
 
 func GetDb() {
-	var err error
-	Db, err = sql.Open("postgres", "postgresql://postgres:postgres@database:5432/local-chat?sslmode=disable")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+	dbUrl := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable",
+		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_PASSWORD"),
+		os.Getenv("POSTGRES_HOST"),
+		os.Getenv("POSTGRES_PORT"),
+		os.Getenv("POSTGRES_DB"))
+	Db, err = sql.Open("postgres", dbUrl)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("database connected")
 }
 
 func SaveMessage(message models.Message) error {

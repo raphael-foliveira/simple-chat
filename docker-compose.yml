@@ -4,6 +4,8 @@ services:
     build: ./frontend
     ports:
       - "80:5173"
+    depends_on:
+      - backend
     volumes:
       - ./frontend:/app
     command: yarn dev --host
@@ -16,6 +18,11 @@ services:
     volumes:
       - ./backend:/app
     command: air -c .air.toml
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: local-chat
+      POSTGRES_HOST: database
     depends_on:
       - database
 
