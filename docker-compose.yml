@@ -17,7 +17,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
-    command: ./main
+    command: go run ./cmd/main.go
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

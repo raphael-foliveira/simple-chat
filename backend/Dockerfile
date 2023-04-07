@@ -4,4 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN go mod tidy && go build ./cmd/main.go
+EXPOSE 8000
+
+RUN go mod tidy
