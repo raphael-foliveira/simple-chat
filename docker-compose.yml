@@ -5,7 +5,7 @@ services:
     ports:
       - "80:5173"
     environment:
-      VITE_API_URL: "172.31.44.98:8000"
+      VITE_API_URL: "18.231.42.223:8000"
     depends_on:
       - backend_api
     command: yarn dev --host
