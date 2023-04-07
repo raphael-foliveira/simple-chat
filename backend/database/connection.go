@@ -3,10 +3,8 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/raphael-foliveira/simple-chat/backend/models"
 )
@@ -14,10 +12,7 @@ import (
 var Db *sql.DB
 
 func GetDb() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
+	var err error
 	dbUrl := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable",
 		os.Getenv("POSTGRES_USER"),
 		os.Getenv("POSTGRES_PASSWORD"),
