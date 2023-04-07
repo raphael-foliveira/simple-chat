@@ -4,6 +4,4 @@ WORKDIR /app
 
 COPY . .
 
-RUN go install github.com/cosmtrek/air@latest
-
-RUN go mod tidy
+RUN go mod tidy && go build ./cmd/main.go
