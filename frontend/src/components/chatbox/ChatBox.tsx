@@ -24,7 +24,7 @@ function ChatBox() {
   const { chatName } = useParams<string>();
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/messages/${chatName}`)
+    fetch(`http://${import.meta.env.VITE_API_URL}/messages/${chatName}`)
       .then((response) => response.json())
       .then((messages) => {
         console.log(messages);
@@ -41,7 +41,7 @@ function ChatBox() {
       };
     } else {
       const newWebSocket = new WebSocket(
-        `${import.meta.env.VITE_WEBSOCKET_URL}/chat/${chatName}`
+        `ws://${import.meta.env.VITE_API_URL}/chat/${chatName}`
       );
       setWebSocket(newWebSocket);
     }
