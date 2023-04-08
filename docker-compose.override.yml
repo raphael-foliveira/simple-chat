@@ -1,0 +1,14 @@
+services:
+  simple-chat_frontend:
+    environment:
+      VITE_API_URL: localhost:8000
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+    command: yarn dev --host
+
+  simple-chat_backend:
+    volumes:
+      - ./backend:/app
+    build: ./backend
+    command: air -c .air.toml

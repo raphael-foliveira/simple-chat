@@ -1,18 +1,18 @@
 services:
-  frontend:
-    container_name: local-chat_frontend
-    build: ./frontend
+  simple-chat_frontend:
+    container_name: simple-chat_frontend
+    image: raphaelfoliveira/simple-chat_frontend:latest
     ports:
       - "80:5173"
     environment:
       VITE_API_URL: "18.231.42.223:8000"
     depends_on:
-      - backend_api
+      - simple-chat_backend
     command: yarn dev --host
 
-  backend_api:
-    container_name: local-chat_backend
-    build: ./backend
+  simple-chat_backend:
+    container_name: simple-chat_backend
+    image: raphaelfoliveira/simple-chat_backend:latest
     ports:
       - "8000:8000"
     command: go run ./cmd/main.go
