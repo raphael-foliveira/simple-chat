@@ -8,10 +8,7 @@ import (
 )
 
 func GetHistory(c *fiber.Ctx) error {
-	messages, err := database.GetChatRoomMessages(c.Params("chatName"))
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
+	messages := database.GetChatRoomMessages(c.Params("chatName"))
+	fmt.Println("messages:", messages)
 	return c.Status(200).JSON(messages)
 }

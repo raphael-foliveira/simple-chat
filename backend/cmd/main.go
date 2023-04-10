@@ -11,7 +11,6 @@ import (
 
 func main() {
 	database.GetDb()
-	defer database.Db.Close()
 	app := fiber.New()
 
 	app.Use(cors.New())

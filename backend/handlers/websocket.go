@@ -26,7 +26,8 @@ func WsServer(c *websocket.Conn) {
 
 	newSubscriber := ChatSubscriber{Conn: c}
 	rooms.Lock()
-	if _, exists := rooms.m[chatName]; !exists {
+	_, exists := rooms.m[chatName]
+	if !exists {
 		fmt.Println("creating new chat:", chatName)
 		rooms.m[chatName] = []ChatSubscriber{}
 	}
@@ -42,11 +43,7 @@ func WsServer(c *websocket.Conn) {
 			fmt.Println("Error in receiving:", err)
 			break
 		}
-		err = database.SaveMessage(message)
-		if err != nil {
-			fmt.Println("Error in saving message:", err)
-			break
-		}
+		database.SaveMessage(&message)
 		for _, sub := range rooms.m[chatName] {
 			sub.Conn.WriteJSON(message)
 		}
