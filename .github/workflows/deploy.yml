@@ -9,10 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
       - name: Build containers
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
@@ -23,6 +19,7 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'cd ~/simple-chat && git pull'
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'rm -rf ~/simple-chat/docker-compose.override.yml'
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'cd ~/simple-chat && sudo docker compose up -d'
           rm -f private_key.pem
