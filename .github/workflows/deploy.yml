@@ -23,6 +23,6 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-          ssh -i private_key.pem $USER@$HOST 'rm -rf ~/simple-chat/docker-compose.override.yml''
+          ssh -i private_key.pem $USER@$HOST 'rm -rf ~/simple-chat/docker-compose.override.yml'
           ssh -i private_key.pem $USER@$HOST 'cd ~/simple-chat && sudo docker compose up -d'
           rm -f private_key.pem
