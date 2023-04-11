@@ -20,8 +20,8 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'echo POSTGRES_USER=$POSTGRES_USER > ~/simple-chat/.env'
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'echo POSTGRES_PASSWORD=$POSTGRES_PASSWORD >> ~/simple-chat/.env'
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'echo POSTGRES_USER="$POSTGRES_USER" > ~/simple-chat/.env'
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'echo POSTGRES_PASSWORD="$POSTGRES_PASSWORD" >> ~/simple-chat/.env'
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'cd ~/simple-chat && git pull'
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'rm -rf ~/simple-chat/docker-compose.override.yml'
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'cd ~/simple-chat && sudo docker compose up -d'
