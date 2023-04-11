@@ -21,7 +21,7 @@ jobs:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem
+          echo $PRIVATE_KEY > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem $EC2_USER@$EC2_HOST 'rm -rf ~/simple-chat/docker-compose.override.yml'
           ssh -i private_key.pem $EC2_USER@$EC2_HOST 'cd ~/simple-chat && sudo docker compose up -d'
