@@ -9,6 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
 
+    steps:
       - name: Build containers
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
