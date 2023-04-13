@@ -3,6 +3,10 @@ services:
     environment:
       VITE_API_URL: localhost:8000
     command: yarn dev --host
+    volumes:
+      - ./frontend:/app
 
   simple-chat_backend:
     command: air -c .air.toml
+    volumes:
+      - ./backend:/app

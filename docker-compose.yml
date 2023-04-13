@@ -9,8 +9,7 @@ services:
     depends_on:
       - simple-chat_backend
     command: yarn dev --host
-    volumes:
-      - ./frontend:/app
+    
 
   simple-chat_backend:
     container_name: simple-chat_backend
@@ -25,8 +24,7 @@ services:
       POSTGRES_HOST: database
     depends_on:
       - database
-    volumes:
-      - ./backend:/app
+
 
   database:
     container_name: simple-chat_database
